@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator HPP & Margin Jualan UMKM Gratis - Hitung Harga Ecer, Reseller & Grosir</title>
+    <meta name="description" content="Kalkulator HPP (Harga Pokok Produksi) dan Margin Keuntungan otomatis untuk UMKM, kuliner, frozen food, dan toko ritel. Hitung harga jual eceran, reseller, dan grosir secara akurat.">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 50px; }
+        header { background: var(--primary); color: #fff; padding: 28px 20px; text-align: center; }
+        header h1 { font-size: 1.7rem; margin-bottom: 8px; }
+        header p { font-size: 0.95rem; opacity: 0.9; max-width: 650px; margin: 0 auto; }
+        .container { max-width: 960px; margin: 24px auto; padding: 0 16px; }
+        .ad-slot { background: #fffbeb; border: 1px dashed var(--accent); padding: 12px; text-align: center; border-radius: 8px; margin-bottom: 24px; font-size: 0.9rem; }
+        .ad-slot a { color: #b45309; font-weight: 700; text-decoration: none; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); margin-bottom: 24px; }
+        .card h2 { font-size: 1.2rem; margin-bottom: 16px; color: var(--primary-dark); border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 5px; }
+        input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
+        input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+        .btn-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+        button { cursor: pointer; border: none; border-radius: 8px; padding: 11px 16px; font-weight: 600; font-size: 0.92rem; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; flex: 1; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-outline { background: #f1f5f9; color: var(--text); border: 1px solid var(--border); }
+        .result-box { background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+        .result-main { font-size: 1.5rem; font-weight: 800; color: var(--primary-dark); }
+        .tier-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.9rem; }
+        .tier-table th, .tier-table td { border: 1px solid var(--border); padding: 10px; text-align: left; }
+        .tier-table th { background: #f1f5f9; }
+        .newsletter-box { background: linear-gradient(135deg, #0f766e, #1e293b); color: white; padding: 28px; border-radius: 12px; text-align: center; margin: 28px 0; }
+        .newsletter-box h3 { font-size: 1.3rem; margin-bottom: 8px; }
+        .newsletter-form { display: flex; gap: 10px; max-width: 480px; margin: 16px auto 0; }
+        .newsletter-form input { flex: 1; border: none; }
+        .newsletter-form button { background: var(--accent); color: #000; }
+        .seo-content h2 { font-size: 1.3rem; margin: 20px 0 10px; color: var(--primary-dark); }
+        .seo-content p, .seo-content li { font-size: 0.95rem; color: #334155; margin-bottom: 10px; }
+        .seo-content ul { padding-left: 20px; }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Kalkulator HPP & Margin Harga Jual UMKM</h1>
+    <p>Hitung modal bersih per produk, tentukan harga Eceran, Reseller, dan Grosir, serta amankan margin dari potongan admin marketplace.</p>
+</header>
+
+<div class="container">
+    <!-- SLOT MONETISASI AFILIASI / ADSENSE -->
+    <div class="ad-slot no-print">
+        💡 <strong>Rekomendasi Alat Dagang UMKM:</strong> Gunakan <a href="#link-afiliasi-anda" target="_blank">Timbangan Digital Presisi & Printer Kasir Termal 58mm Murah (Cek Promo Di Sini &rarr;)</a>
+    </div>
+
+    <div class="grid">
+        <!-- PANEL INPUT -->
+        <div class="card">
+            <h2>1. Masukkan Komponen Biaya</h2>
+            <div class="form-group">
+                <label>Nama Produk / Batch Produksi</label>
+                <input type="text" id="prodName" value="Paket Frozen Food / Kuliner 500gr">
+            </div>
+            <div class="form-group">
+                <label>Total Biaya Bahan Baku / Beli Barang (Rp)</label>
+                <input type="number" id="rawCost" value="500000" oninput="hitungHPP()">
+            </div>
+            <div class="form-group">
+                <label>Total Biaya Kemasan, Plastik & Stiker (Rp)</label>
+                <input type="number" id="packCost" value="50000" oninput="hitungHPP()">
+            </div>
+            <div class="form-group">
+                <label>Biaya Operasional (Listrik Freezer, Gas, Tenaga) (Rp)</label>
+                <input type="number" id="opsCost" value="50000" oninput="hitungHPP()">
+            </div>
+            <div class="form-group">
+                <label>Jumlah Produk Dihasilkan (Pcs / Bks)</label>
+                <input type="number" id="qty" value="40" min="1" oninput="hitungHPP()">
+            </div>
+            <div class="form-group">
+                <label>Target Margin Eceran (%)</label>
+                <input type="number" id="marginRetail" value="35" min="1" max="95" oninput="hitungHPP()">
+            </div>
+            <div class="form-group">
+                <label>Potongan Admin Marketplace / QRIS (%)</label>
+                <input type="number" id="adminFee" value="6" min="0" max="50" oninput="hitungHPP()">
+            </div>
+        </div>
+
+        <!-- PANEL HASIL -->
+        <div class="card">
+            <h2>2. Hasil Perhitungan HPP & Harga Jual</h2>
+            <div class="result-box">
+                <div>HPP (Modal Bersih) per Pcs:</div>
+                <div class="result-main" id="hppPerUnit">Rp 15.000</div>
+                <small style="color:var(--muted)">Total Modal 1 Batch: <span id="totalModal">Rp 600.000</span></small>
+            </div>
+
+            <table class="tier-table">
+                <thead>
+                    <tr>
+                        <th>Level Harga</th>
+                        <th>Harga Jual</th>
+                        <th>Untung / Pcs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Harga Grosir</strong> (Margin 15%)</td>
+                        <td id="priceGrosir">Rp 17.647</td>
+                        <td id="profitGrosir">Rp 2.647</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Harga Reseller</strong> (Margin 25%)</td>
+                        <td id="priceReseller">Rp 20.000</td>
+                        <td id="profitReseller">Rp 5.000</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Harga Ecer Toko</strong> (<span id="lblMargin">35</span>%)</td>
+                        <td id="priceRetail">Rp 23.077</td>
+                        <td id="profitRetail">Rp 8.077</td>
+                    </tr>
+                    <tr style="background:#fffbeb;">
+                        <td><strong>Harga Marketplace</strong> (+Admin)</td>
+                        <td id="priceMP" style="font-weight:700;color:#b45309;">Rp 24.550</td>
+                        <td id="profitMP">Rp 8.077</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 14px; font-size: 0.92rem;">
+                💰 <strong>Potensi Laba Bersih 1 Batch (Eceran):</strong> <span id="totalProfitBatch" style="font-weight:700;color:var(--primary-dark);">Rp 323.077</span>
+            </div>
+
+            <div class="btn-row no-print">
+                <button class="btn-primary" onclick="salinWA()">📋 Salin Hitungan ke WA</button>
+                <button class="btn-outline" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PILAR 3: PENANGKAP EMAIL NEWSLETTER -->
+    <div class="newsletter-box no-print">
+        <h3>📈 Dapatkan Rumus Dagang & Ide Produk Laris Tiap Minggu!</h3>
+        <p>Gabung bersama ribuan pemilik toko & UMKM. Gratis template Excel kasir di email pertama Anda.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Terima kasih! Email Anda telah terdaftar di Newsletter UMKM.');">
+            <input type="email" placeholder="Masukkan alamat email aktif Anda..." required>
+            <button type="submit">Kirim Saya Template</button>
+        </form>
+    </div>
+
+    <!-- PILAR 2: KONTEN PROGRAMMATIC SEO -->
+    <div class="card seo-content">
+        <h2>Cara Menghitung HPP (Harga Pokok Produksi) agar Tidak Boncos</h2>
+        <p>Banyak pedagang UMKM merasa dagangannya laris manis setiap hari, namun saat akhir bulan uang kas tetap kosong. Penyebab utamanya adalah <strong>lupa memasukkan biaya tersembunyi</strong> seperti plastik kemasan, penyusutan alat, listrik <em>freezer</em>, hingga potongan admin aplikasi.</p>
+        <ul>
+            <li><strong>Rumus HPP per Unit:</strong> (Biaya Bahan Baku + Biaya Kemasan + Biaya Operasional) ÷ Jumlah Unit Produksi.</li>
+            <li><strong>Rumus Harga Jual Berbasis Margin:</strong> HPP ÷ (1 - Persentase Margin). Dengan rumus ini, margin keuntungan Anda dihitung dari harga jual akhir, bukan sekadar <em>markup</em> dari modal.</li>
+        </ul>
+
+        <h2>Tabel Simulasi HPP & Harga Jual Otomatis</h2>
+        <p>Berikut adalah simulasi perbandingan tingkat margin untuk produk dengan HPP saat ini (<strong id="seoHpp">Rp 15.000</strong>):</p>
+        <table class="tier-table" id="simTable">
+            <thead>
+                <tr>
+                    <th>Target Margin</th>
+                    <th>Harga Jual Ideal</th>
+                    <th>Profit Bersih / Pcs</th>
+                    <th>Cocok Untuk Jalur Distribusi</th>
+                </tr>
+            </thead>
+            <tbody id="simBody"></tbody>
+        </table>
+
+        <h2>Pertanyaan Umum (FAQ) Seputar Penentuan Harga UMKM</h2>
+        <p><strong>1. Apa bedanya Margin dan Markup?</strong><br>
+        Markup adalah persentase tambahan dari modal (misal modal Rp10.000 ditambah markup 50% menjadi Rp15.000). Sedangkan Margin adalah persentase keuntungan dibandingkan harga jual akhir.</p>
+        <p><strong>2. Berapa selisih ideal antara harga Grosir, Reseller, dan Eceran?</strong><br>
+        Untuk produk makanan beku (<em>frozen food</em>) dan sembako, margin grosir umumnya 10%–15%, reseller 20%–25%, dan eceran 30%–45%.</p>
+    </div>
+</div>
+
+<script>
+function formatRp(angka) {
+    return 'Rp ' + Math.round(angka).toLocaleString('id-ID');
+}
+
+function hitungHPP() {
+    const raw = parseFloat(document.getElementById('rawCost').value) || 0;
+    const pack = parseFloat(document.getElementById('packCost').value) || 0;
+    const ops = parseFloat(document.getElementById('opsCost').value) || 0;
+    const qty = Math.max(1, parseFloat(document.getElementById('qty').value) || 1);
+    const marginRetail = Math.min(95, Math.max(1, parseFloat(document.getElementById('marginRetail').value) || 30));
+    const adminFee = Math.min(50, Math.max(0, parseFloat(document.getElementById('adminFee').value) || 0));
+
+    const totalModal = raw + pack + ops;
+    const hpp = totalModal / qty;
+
+    const pGrosir = hpp / (1 - 0.15);
+    const pReseller = hpp / (1 - 0.25);
+    const pRetail = hpp / (1 - (marginRetail / 100));
+    const pMP = pRetail / (1 - (adminFee / 100));
+
+    document.getElementById('totalModal').innerText = formatRp(totalModal);
+    document.getElementById('hppPerUnit').innerText = formatRp(hpp);
+    document.getElementById('lblMargin').innerText = marginRetail;
+
+    document.getElementById('priceGrosir').innerText = formatRp(pGrosir);
+    document.getElementById('profitGrosir').innerText = formatRp(pGrosir - hpp);
+
+    document.getElementById('priceReseller').innerText = formatRp(pReseller);
+    document.getElementById('profitReseller').innerText = formatRp(pReseller - hpp);
+
+    document.getElementById('priceRetail').innerText = formatRp(pRetail);
+    document.getElementById('profitRetail').innerText = formatRp(pRetail - hpp);
+
+    document.getElementById('priceMP').innerText = formatRp(pMP);
+    document.getElementById('profitMP').innerText = formatRp(pRetail - hpp);
+
+    document.getElementById('totalProfitBatch').innerText = formatRp((pRetail - hpp) * qty);
+    document.getElementById('seoHpp').innerText = formatRp(hpp);
+
+    // Update Tabel Programmatic SEO
+    const tiers = [
+        { m: 10, label: 'Distributor Partai Besar' },
+        { m: 15, label: 'Grosir Toko' },
+        { m: 25, label: 'Agen / Reseller Aktif' },
+        { m: 35, label: 'Konsumen Eceran' },
+        { m: 50, label: 'Kuliner Siap Saji / Resto' }
+    ];
+    let rows = '';
+    tiers.forEach(t => {
+        let hj = hpp / (1 - (t.m / 100));
+        rows += `<tr>
+            <td><strong>${t.m}%</strong></td>
+            <td>${formatRp(hj)}</td>
+            <td>${formatRp(hj - hpp)}</td>
+            <td>${t.label}</td>
+        </tr>`;
+    });
+    document.getElementById('simBody').innerHTML = rows;
+}
+
+function salinWA() {
+    const nama = document.getElementById('prodName').value;
+    const hpp = document.getElementById('hppPerUnit').innerText;
+    const grosir = document.getElementById('priceGrosir').innerText;
+    const reseller = document.getElementById('priceReseller').innerText;
+    const ecer = document.getElementById('priceRetail').innerText;
+    const mp = document.getElementById('priceMP').innerText;
+
+    const teks = `*REKAP HPP & HARGA JUAL: ${nama}*\n` +
+                 `• HPP Bersih/Unit: ${hpp}\n` +
+                 `• Harga Grosir (15%): ${grosir}\n` +
+                 `• Harga Reseller (25%): ${reseller}\n` +
+                 `• Harga Ecer Toko: ${ecer}\n` +
+                 `• Harga Marketplace: ${mp}`;
+    navigator.clipboard.writeText(teks);
+    alert('Ringkasan harga berhasil disalin! Siap ditempel ke WhatsApp.');
+}
+
+hitungHPP();
+</script>
+</body>
+</html>
